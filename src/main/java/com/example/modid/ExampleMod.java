@@ -1,29 +1,44 @@
 package com.example.modid;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.example.modid.proxy.CommonProxy;
 
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(
     modid = "@{MOD_ID}",
     name = "@{MOD_NAME}",
     version = "@{MOD_VERSION}",
-    dependencies = "@{DEPENDENCIES}"
+    acceptableRemoteVersions = "*",
+    dependencies = "@{DEPENDENCIES}",
+    customProperties = {
+        @Mod.CustomProperty(k = "license", v = "MPL-2.0")
+    }
 )
-public class ExampleMod {
+public final class ExampleMod {
 
-    public static final Logger LOGGER = LogManager.getLogger("@{MOD_NAME}");
+    @SidedProxy(
+        clientSide = "@{ROOT_PACKAGE}.@{MOD_ID}.internal.proxy.ClientProxy",
+        serverSide = "@{ROOT_PACKAGE}.@{MOD_ID}.internal.proxy.CommonProxy"
+    )
+    public static CommonProxy proxy;
 
-    /**
-     * <a href="https://cleanroommc.com/wiki/forge-mod-development/event#overview">
-     *     Take a look at how many FMLStateEvents you can listen to via the @Mod.EventHandler annotation here
-     * </a>
-     */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        LOGGER.info("Hello From {}!", "@{MOD_NAME}");
+        proxy.preInit(event);
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.init(event);
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit(event);
     }
 
 }
