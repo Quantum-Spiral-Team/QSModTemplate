@@ -6,6 +6,7 @@ plugins {
     `java-library`
     id("com.cleanroommc.cleanroomgradle")
     id("com.cleanroommc.conventions") version "1.7.0"
+    id("me.champeau.jmh") version "0.7.4"
 }
 
 fun prop(name: String): String = property(name) as String
@@ -110,6 +111,13 @@ tokenEnvoy {
     set("MOD_VERSION", project.version.toString())
     set("MOD_AUTHORS", modAuthors.tokens(Regex(",")).joinToString("\", \"") { it.trim() })
     set(file("tokens.properties"))
+}
+
+jmh {
+    jmhVersion.set(prop("jmh_version"))
+    threads.set(1)
+    resultFormat.set("JSON")
+    resultsFile.set(layout.buildDirectory.file("test-results/jmh/jmh-results.json"))
 }
 
 tasks.withType<Javadoc>().configureEach {
