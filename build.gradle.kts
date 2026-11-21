@@ -93,6 +93,7 @@ dependencies {
     } else {
         runtimeOnly("mezz:jei:4.37.3:dev")
     }
+    testImplementation("org.openjdk.jol:jol-core:${prop("jol_version")}")
 }
 
 cleanroom {
